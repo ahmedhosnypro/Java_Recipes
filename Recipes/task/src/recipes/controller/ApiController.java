@@ -2,25 +2,29 @@ package recipes.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import recipes.model.Recipe;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @RestController
 public class ApiController {
-    Recipe recipe = new Recipe();
+    List<Recipe> recipes = new CopyOnWriteArrayList<>();
 
-    @GetMapping(path = "/api/recipe")
-    public ResponseEntity<Recipe> getRecipe() {
-        return new ResponseEntity<>(recipe, recipe.getName() == null
-                ? HttpStatus.NOT_FOUND
-                : HttpStatus.OK);
+    @GetMapping(path = "/api/recipe/{id}")
+    public ResponseEntity<Recipe> getRecipe(@PathVariable int id) {
+        if (id < recipes.size()) {
+            return new ResponseEntity<>(recipes.get(id), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @PostMapping(path = "/api/recipe")
-    public void setRecipe(@RequestBody Recipe recipe) {
-        this.recipe = recipe;
+    @PostMapping(path = "/api/recipe/new")
+    public ResponseEntity<Map<String, Integer>> setRecipe(@RequestBody Recipe recipe) {
+        recipes.add(recipe);
+        return new ResponseEntity<>(Map.of("id", recipes.size() - 1), HttpStatus.OK);
     }
 }
