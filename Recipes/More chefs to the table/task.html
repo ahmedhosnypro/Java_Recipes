@@ -1,3 +1,4 @@
+<div class="step-text">
 <h5 id="description">Description</h5>
 <p>Imagine a service that supports the registration process, can handle a lot of users, and each of them can add their own recipes. Also, a user can update or delete only their recipes but can view recipes added by other users. In this stage, you will implement all this functionality with Spring Boot Security.</p>
 <p>The stage is divided into 3 steps. In the first step, you need to add an endpoint responsible for the user registration. The endpoint receives 2 fields: <code class="language-json">email</code> and <code class="language-json">password</code>. The second step is to enable Spring Security and configure the access restrictions – only the registered users with the correct login and password should have the rights to use the service. After that, restrict the deletion and updating to the recipe author only.</p>
@@ -84,3 +85,4 @@
 <p>Status code: <code class="language-json">403 (Forbidden)</code></p>
 <p>Further <code class="language-json">DELETE /api/recipe/1</code> request with basic authentication; email (login): CamelCaseRecipe@somewhere.com, password: C00k1es.</p>
 <p>Status code: <code class="language-json">403 (Forbidden)</code></p>
+</div>

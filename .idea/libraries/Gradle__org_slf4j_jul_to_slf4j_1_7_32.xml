@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: org.slf4j:jul-to-slf4j:1.7.32">
+  <library name="Gradle: org.slf4j:jul-to-slf4j:1.7.32" external-system-id="GRADLE">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/jul-to-slf4j/1.7.32/8a055c04ab44e8e8326901cadf89080721348bdb/jul-to-slf4j-1.7.32.jar!/" />
     </CLASSES>

@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: org.apache.logging.log4j:log4j-to-slf4j:2.14.1">
+  <library name="Gradle: org.apache.logging.log4j:log4j-to-slf4j:2.14.1" external-system-id="GRADLE">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-to-slf4j/2.14.1/ce8a86a3f50a4304749828ce68e7478cafbc8039/log4j-to-slf4j-2.14.1.jar!/" />
     </CLASSES>

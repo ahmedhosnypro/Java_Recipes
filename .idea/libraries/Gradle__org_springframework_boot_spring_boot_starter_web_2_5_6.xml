@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: org.springframework.boot:spring-boot-starter-web:2.5.6">
+  <library name="Gradle: org.springframework.boot:spring-boot-starter-web:2.5.6" external-system-id="GRADLE">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-web/2.5.6/46b479490170914f7477b96a21241183b181c24d/spring-boot-starter-web-2.5.6.jar!/" />
     </CLASSES>

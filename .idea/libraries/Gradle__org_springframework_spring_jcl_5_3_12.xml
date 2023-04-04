@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: org.springframework:spring-jcl:5.3.12">
+  <library name="Gradle: org.springframework:spring-jcl:5.3.12" external-system-id="GRADLE">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.3.12/2b5f5bb4a78af879bd174ceff5226da3f014ab9d/spring-jcl-5.3.12.jar!/" />
     </CLASSES>

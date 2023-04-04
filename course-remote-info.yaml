@@ -3,11 +3,11 @@ hyperskill_project:
   ide_files: https://stepik.org/media/attachments/lesson/529086/additional_files.json
   is_template_based: false
   use_ide: true
-update_date: "Thu, 01 Jan 1970 00:00:00 UTC"
+update_date: "Tue, 04 Apr 2023 11:05:35 UTC"
 stages:
 - id: 917
   step: 13088
-  is_completed: false
+  is_completed: true
 - id: 918
   step: 13089
   is_completed: false
@@ -196,14 +196,14 @@ topics:
     theory_id: 5076
   - title: External resources
     theory_id: 6216
+  - title: Web development
+    theory_id: 13931
   - title: Pseudocode
     theory_id: 15090
   - title: Pseudocode basics
     theory_id: 19510
   - title: Complex constructions in pseudocode
     theory_id: 20922
-  - title: Web development
-    theory_id: 13931
   - title: Libraries
     theory_id: 8504
   - title: Frameworks
@@ -280,6 +280,8 @@ topics:
     theory_id: 3557
   - title: Collections and thread-safety
     theory_id: 4984
+  - title: MVC
+    theory_id: 17197
   - title: "Hashing: overview"
     theory_id: 9831
   - title: Hash function
@@ -290,8 +292,6 @@ topics:
     theory_id: 3558
   - title: Thread-safe maps
     theory_id: 17081
-  - title: MVC
-    theory_id: 17197
   - title: Defining classes
     theory_id: 3618
   - title: Constructor
@@ -409,7 +409,7 @@ topics:
   - title: JPA relationships
     theory_id: 17787
   - title: Cascade operations
-    theory_id: 19203
+    theory_id: 27502
   - title: Inner classes
     theory_id: 11505
   3:
@@ -445,7 +445,7 @@ topics:
   - title: Getting authenticated user details
     theory_id: 16710
   - title: Spring actuator
-    theory_id: 16413
+    theory_id: 27488
   - title: Authentication and Authorization
     theory_id: 14219
   - title: Introduction to creational patterns
