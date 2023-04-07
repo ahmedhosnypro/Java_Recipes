@@ -1,5 +1,6 @@
 <component name="libraryTable">
-  <library name="Gradle: org.apache.httpcomponents:httpcore:4.4.14" external-system-id="GRADLE">
+  <library name="Gradle: org.apache.httpcomponents:httpcore:4.4.14" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.apache.httpcomponents" artifactId="httpcore" version="4.4.14" />
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.14/9dd1a631c082d92ecd4bd8fd4cf55026c720a8c1/httpcore-4.4.14.jar!/" />
     </CLASSES>

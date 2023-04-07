@@ -1,28 +1,6 @@
 type: edu
 custom_name: Sort & update
 files:
-- name: src/recipes/RecipesApplication.java
-  visible: true
-  text: |
-    package recipes;
-
-    import org.springframework.boot.SpringApplication;
-    import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-    @SpringBootApplication
-    public class RecipesApplication {
-        public static void main(String[] args) {
-            SpringApplication.run(RecipesApplication.class, args);
-        }
-    }
-  learner_created: false
-- name: src/resources/application.properties
-  visible: true
-  text: |-
-    server.port=8881
-    management.endpoints.web.exposure.include=*
-    management.endpoint.shutdown.enabled=true
-  learner_created: false
 - name: build.gradle
   visible: true
   text: |-
@@ -54,6 +32,89 @@ files:
         implementation 'org.springframework.boot:spring-boot-starter-web'
     }
   learner_created: false
+- name: src/recipes/repository/RecipeRepository.java
+  visible: true
+  text: |
+    package recipes.repository;
+
+    import org.springframework.data.jpa.repository.JpaRepository;
+    import org.springframework.stereotype.Repository;
+    import recipes.model.Recipe;
+
+    @Repository
+    public interface RecipeRepository extends JpaRepository<Recipe, Long> {
+    }
+  learner_created: true
+- name: src/recipes/service/RecipeService.java
+  visible: true
+  text: |
+    package recipes.service;
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.stereotype.Service;
+    import recipes.model.Recipe;
+    import recipes.repository.RecipeRepository;
+
+    import java.util.Optional;
+
+    @Service
+    public class RecipeService {
+        @Autowired
+        private RecipeRepository recipeRepository;
+
+        public Recipe save(Recipe recipe) {
+            return recipeRepository.save(recipe);
+        }
+
+        public long count() {
+            return recipeRepository.count();
+        }
+
+        public void deleteById(long id) {
+            recipeRepository.deleteById(id);
+        }
+
+        public Optional<Recipe> findById(long id) {
+            return recipeRepository.findById(id);
+        }
+
+        public boolean existsById(long id) {
+            return recipeRepository.existsById(id);
+        }
+    }
+  learner_created: true
+- name: src/recipes/controller/ControllerExceptionHandler.java
+  visible: true
+  text: |-
+    package recipes.controller;
+
+    import jakarta.validation.ConstraintViolationException;
+    import jakarta.validation.ValidationException;
+    import org.springframework.http.HttpStatus;
+    import org.springframework.http.ResponseEntity;
+    import org.springframework.web.bind.annotation.ControllerAdvice;
+    import org.springframework.web.bind.annotation.ExceptionHandler;
+    import org.springframework.web.bind.annotation.ResponseBody;
+    import org.springframework.web.bind.annotation.ResponseStatus;
+
+    @ControllerAdvice
+    public class ControllerExceptionHandler {
+
+        @ResponseBody
+        @ResponseStatus(HttpStatus.BAD_REQUEST)
+        @ExceptionHandler(ValidationException.class)
+        ResponseEntity exceptionHandler(ValidationException e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        @ResponseBody
+        @ResponseStatus(HttpStatus.BAD_REQUEST)
+        @ExceptionHandler(ConstraintViolationException.class)
+        ResponseEntity exceptionHandler(ConstraintViolationException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+  learner_created: true
 - name: test/RecipesApplicationTest.java
   visible: false
   text: |
@@ -635,6 +696,160 @@ files:
         }
     }
   learner_created: false
+- name: src/resources/docker-compose.yml
+  visible: true
+  text: |-
+    services:
+      db:
+        container_name: recipe
+        image: postgres
+        environment:
+          POSTGRES_USER: recipe
+          POSTGRES_PASSWORD: root
+          PGDATA: /data/postgres
+        volumes:
+          - db:/data/order_tracker
+        ports:
+          - '5332:5432'
+        networks:
+          - db
+        restart: unless-stopped
+
+    networks:
+      db:
+        driver: bridge
+
+    volumes:
+      db:
+  learner_created: true
+- name: src/recipes/controller/ApiController.java
+  visible: true
+  text: |-
+    package recipes.controller;
+
+    import com.fasterxml.jackson.core.JsonProcessingException;
+    import com.fasterxml.jackson.databind.ObjectMapper;
+    import jakarta.validation.Valid;
+    import org.slf4j.Logger;
+    import org.slf4j.LoggerFactory;
+    import org.springframework.http.HttpStatus;
+    import org.springframework.http.ResponseEntity;
+    import org.springframework.web.bind.annotation.*;
+    import recipes.model.Recipe;
+    import recipes.service.RecipeService;
+
+    import java.util.Map;
+
+    @RestController
+    public class ApiController {
+        private final RecipeService recipeService;
+        private final Logger logger = LoggerFactory.getLogger(ApiController.class);
+
+        public ApiController(RecipeService recipeService) {
+            this.recipeService = recipeService;
+        }
+
+        @GetMapping(path = "/api/recipe/{id}")
+        public ResponseEntity<Recipe> getRecipe(@PathVariable int id) {
+            var optRecipe = recipeService.findById(id);
+            return optRecipe.map(recipe -> new ResponseEntity<>(recipe, HttpStatus.OK))
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        }
+
+        @PostMapping(path = "/api/recipe/new")
+        public ResponseEntity<Map<String, Long>> setRecipe(@Valid @RequestBody Recipe recipe) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                logger.info("Saving recipe: " + mapper.writeValueAsString(recipe));
+            } catch (JsonProcessingException ignored) {
+            }
+            var savesRecipe = recipeService.save(recipe);
+            return new ResponseEntity<>(Map.of("id", savesRecipe.getId()), HttpStatus.OK);
+        }
+
+        @DeleteMapping(path = "/api/recipe/{id}")
+        public ResponseEntity<Object> deleteRecipe(@PathVariable int id) {
+            if (recipeService.existsById(id)) {
+                recipeService.deleteById(id);
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }
+    }
+  learner_created: true
+- name: src/resources/application.properties
+  visible: true
+  text: |-
+    server.port=8881
+    management.endpoints.web.exposure.include=*
+    management.endpoint.shutdown.enabled=true
+  learner_created: false
+- name: src/recipes/model/Recipe.java
+  visible: true
+  text: |
+    package recipes.model;
+
+    import com.fasterxml.jackson.annotation.JsonIgnore;
+    import jakarta.persistence.*;
+    import jakarta.validation.constraints.NotBlank;
+    import jakarta.validation.constraints.NotEmpty;
+    import jakarta.validation.constraints.Size;
+    import lombok.*;
+
+    import java.util.List;
+
+    @Getter
+    @Setter
+    @NoArgsConstructor(force = true)
+    @AllArgsConstructor
+    @Entity
+    public class Recipe {
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "id", nullable = false)
+        @JsonIgnore
+        private Long id;
+
+        @NotBlank
+        private String name;
+
+        @NotBlank
+        private String description;
+
+        @NotEmpty
+        @Size(min = 1)
+        @ElementCollection
+        @CollectionTable(name = "ingredient", joinColumns = @JoinColumn(name = "id"))
+        @Column(name = "ingredients")
+        private List<String> ingredients;
+
+        @NotEmpty
+        @Size(min = 1)
+        @ElementCollection
+        @CollectionTable(name = "direction", joinColumns = @JoinColumn(name = "id"))
+        @Column(name = "directions")
+        private List<String> directions;
+    }
+  learner_created: true
+- name: src/recipes/RecipesApplication.java
+  visible: true
+  text: |
+    package recipes;
+
+    import org.springframework.boot.SpringApplication;
+    import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+    @SpringBootApplication
+    public class RecipesApplication {
+        public static void main(String[] args) {
+            SpringApplication.run(RecipesApplication.class, args);
+        }
+    }
+  learner_created: false
 feedback_link: https://hyperskill.org/learn/step/13091#comment
-status: Unchecked
-record: -1
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Fri, 07 Apr 2023 04:33:08 UTC"
+record: 4

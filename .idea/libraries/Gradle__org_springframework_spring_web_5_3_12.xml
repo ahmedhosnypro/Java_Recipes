@@ -1,5 +1,6 @@
 <component name="libraryTable">
-  <library name="Gradle: org.springframework:spring-web:5.3.12" external-system-id="GRADLE">
+  <library name="Gradle: org.springframework:spring-web:5.3.12" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.springframework" artifactId="spring-web" version="5.3.12" />
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/5.3.12/78991a50d17da49bddc4987a2cc8b83d46c402a7/spring-web-5.3.12.jar!/" />
     </CLASSES>

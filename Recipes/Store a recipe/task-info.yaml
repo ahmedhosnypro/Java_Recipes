@@ -15,13 +15,6 @@ files:
         }
     }
   learner_created: false
-- name: src/resources/application.properties
-  visible: true
-  text: |-
-    server.port=8881
-    management.endpoints.web.exposure.include=*
-    management.endpoint.shutdown.enabled=true
-  learner_created: false
 - name: build.gradle
   visible: true
   text: |-
@@ -53,6 +46,18 @@ files:
         implementation 'org.springframework.boot:spring-boot-starter-web'
     }
   learner_created: false
+- name: src/resources/docker-compose.yml
+  visible: true
+  learner_created: true
+- name: src/recipes/repository/RecipeRepository.java
+  visible: true
+  learner_created: true
+- name: src/recipes/service/RecipeService.java
+  visible: true
+  learner_created: true
+- name: src/recipes/controller/ControllerExceptionHandler.java
+  visible: true
+  learner_created: true
 - name: test/RecipesApplicationTest.java
   visible: false
   text: |
@@ -308,6 +313,69 @@ files:
         }
     }
   learner_created: false
+- name: src/recipes/controller/ApiController.java
+  visible: true
+  text: |
+    package recipes.controller;
+
+    import org.springframework.http.HttpStatus;
+    import org.springframework.http.ResponseEntity;
+    import org.springframework.web.bind.annotation.*;
+    import recipes.model.Recipe;
+
+    import java.util.List;
+    import java.util.Map;
+    import java.util.concurrent.CopyOnWriteArrayList;
+
+    @RestController
+    public class ApiController {
+        List<Recipe> recipes = new CopyOnWriteArrayList<>();
+
+        @GetMapping(path = "/api/recipe/{id}")
+        public ResponseEntity<Recipe> getRecipe(@PathVariable int id) {
+            if (id < recipes.size()) {
+                return new ResponseEntity<>(recipes.get(id), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+
+        @PostMapping(path = "/api/recipe/new")
+        public ResponseEntity<Map<String, Integer>> setRecipe(@RequestBody Recipe recipe) {
+            recipes.add(recipe);
+            return new ResponseEntity<>(Map.of("id", recipes.size() - 1), HttpStatus.OK);
+        }
+    }
+  learner_created: true
+- name: src/resources/application.properties
+  visible: true
+  text: |-
+    server.port=8881
+    management.endpoints.web.exposure.include=*
+    management.endpoint.shutdown.enabled=true
+  learner_created: false
+- name: src/recipes/model/Recipe.java
+  visible: true
+  text: |
+    package recipes.model;
+
+    import lombok.AllArgsConstructor;
+    import lombok.Data;
+    import lombok.NoArgsConstructor;
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public class Recipe {
+        private String name;
+        private String description;
+        private String[] ingredients;
+        private String[] directions;
+    }
+  learner_created: true
 feedback_link: https://hyperskill.org/learn/step/13090#comment
-status: Unchecked
-record: -1
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Thu, 06 Apr 2023 15:56:18 UTC"
+record: 3

@@ -1,0 +1,22 @@
+services:
+  db:
+    container_name: recipe
+    image: postgres
+    environment:
+      POSTGRES_USER: recipe
+      POSTGRES_PASSWORD: root
+      PGDATA: /data/postgres
+    volumes:
+      - db:/data/order_tracker
+    ports:
+      - '5332:5432'
+    networks:
+      - db
+    restart: unless-stopped
+
+networks:
+  db:
+    driver: bridge
+
+volumes:
+  db:

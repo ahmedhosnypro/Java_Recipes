@@ -1,5 +1,6 @@
 <component name="libraryTable">
-  <library name="Gradle: org.apache.tomcat.embed:tomcat-embed-el:9.0.54" external-system-id="GRADLE">
+  <library name="Gradle: org.apache.tomcat.embed:tomcat-embed-el:9.0.54" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.apache.tomcat.embed" artifactId="tomcat-embed-el" version="9.0.54" />
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-el/9.0.54/9edb062d38d0fd8a165289f44b28b3b0e0e11ed7/tomcat-embed-el-9.0.54.jar!/" />
     </CLASSES>

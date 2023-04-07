@@ -814,6 +814,291 @@ files:
         }
     }
   learner_created: false
+- name: src/recipes/repository/RecipeRepository.java
+  visible: true
+  text: |
+    package recipes.repository;
+
+    import org.springframework.data.jpa.repository.JpaRepository;
+    import org.springframework.stereotype.Repository;
+    import recipes.model.Recipe;
+
+    import java.util.List;
+
+    @Repository
+    public interface RecipeRepository extends JpaRepository<Recipe, Long> {
+        List<Recipe> findByCategoryIgnoreCaseOrderByDateDesc(String category);
+
+        List<Recipe> findByNameContainingIgnoreCaseOrderByDateDesc(String name);
+    }
+  learner_created: true
+- name: src/recipes/service/RecipeService.java
+  visible: true
+  text: |
+    package recipes.service;
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.stereotype.Service;
+    import recipes.model.Recipe;
+    import recipes.repository.RecipeRepository;
+
+    import java.util.List;
+    import java.util.Optional;
+
+    @Service
+    public class RecipeService {
+
+        private final RecipeRepository recipeRepository;
+
+        @Autowired
+        public RecipeService(RecipeRepository recipeRepository) {
+            this.recipeRepository = recipeRepository;
+        }
+
+        public Recipe save(Recipe recipe) {
+            return recipeRepository.save(recipe);
+        }
+
+        public void deleteById(long id) {
+            recipeRepository.deleteById(id);
+        }
+
+        public Optional<Recipe> findById(long id) {
+            return recipeRepository.findById(id);
+        }
+
+        public boolean existsById(long id) {
+            return recipeRepository.existsById(id);
+        }
+
+        public List<Recipe> findByCategory(String category) {
+            return recipeRepository.findByCategoryIgnoreCaseOrderByDateDesc(category);
+        }
+
+        public List<Recipe> findByNameContainingIgnoreCaseOrderByDateDesc(String name) {
+            return recipeRepository.findByNameContainingIgnoreCaseOrderByDateDesc(name);
+        }
+    }
+  learner_created: true
+- name: src/recipes/controller/ApiController.java
+  visible: true
+  text: |-
+    package recipes.controller;
+
+    import org.springframework.http.HttpStatus;
+    import org.springframework.http.ResponseEntity;
+    import org.springframework.web.bind.annotation.*;
+    import recipes.model.Recipe;
+    import recipes.service.RecipeService;
+
+    import javax.validation.Valid;
+    import java.util.Map;
+
+    @RestController
+    public class ApiController {
+        private final RecipeService recipeService;
+
+        public ApiController(RecipeService recipeService) {
+            this.recipeService = recipeService;
+        }
+
+        /**
+         * save a new recipe
+         *
+         * @param recipe recipe to save
+         * @return 200 OK with an id of saved recipe
+         */
+        @PostMapping(path = "/api/recipe/new")
+        public ResponseEntity<Map<String, Long>> sava(@Valid @RequestBody Recipe recipe) {
+            var savesRecipe = recipeService.save(recipe);
+            return new ResponseEntity<>(Map.of("id", savesRecipe.getId()), HttpStatus.OK);
+        }
+
+
+        /**
+         * update a recipe
+         * @param id id of a recipe to update
+         * @param recipe recipe to update
+         * @return 200 OK if a recipe updated, 404 Not Found if a recipe not found, 400 Bad Request if a recipe is invalid
+         */
+        @PutMapping(path = "/api/recipe/{id}")
+        public ResponseEntity<Object> update(@PathVariable long id, @Valid @RequestBody Recipe recipe) {
+            if (recipeService.existsById(id)) {
+                recipe.setId(id);
+                recipeService.save(recipe);
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }
+
+
+        /**
+         * get a recipe by id
+         *
+         * @param id id of a recipe to get
+         * @return 200 OK with a recipe if a recipe found, 404 Not Found if a recipe not found
+         */
+        @GetMapping(path = "/api/recipe/{id}")
+        public ResponseEntity<Recipe> findById(@PathVariable int id) {
+            var optRecipe = recipeService.findById(id);
+            return optRecipe.map(recipe -> new ResponseEntity<>(recipe, HttpStatus.OK))
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        }
+
+        /**
+         * search recipes by category or name
+         *
+         * @param category category of recipes to search
+         * @param name name of recipes to search
+         * @return 200 OK with a list of recipes if a recipes found, 400 Bad Request if a request is invalid
+         */
+        @GetMapping(path = "/api/recipe/search")
+        public ResponseEntity<Object> search(@RequestParam(required = false) String category, @RequestParam(required = false) String name) {
+            if (category != null && name != null) {
+                return ResponseEntity.badRequest().build();
+            } else if (category != null) {
+                return new ResponseEntity<>(recipeService.findByCategory(category), HttpStatus.OK);
+            } else if (name != null) {
+                return new ResponseEntity<>(recipeService.findByNameContainingIgnoreCaseOrderByDateDesc(name), HttpStatus.OK);
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
+        }
+
+        /**
+         * delete recipe by id
+         *
+         * @param id id of recipe to delete
+         * @return 200 OK if a recipe deleted, 404 Not Found if a recipe not found
+         */
+        @DeleteMapping(path = "/api/recipe/{id}")
+        public ResponseEntity<Object> deleteRecipe(@PathVariable int id) {
+            if (recipeService.existsById(id)) {
+                recipeService.deleteById(id);
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }
+    }
+  learner_created: true
+- name: src/recipes/model/Recipe.java
+  visible: true
+  text: |
+    package recipes.model;
+
+    import com.fasterxml.jackson.annotation.JsonIgnore;
+    import lombok.AllArgsConstructor;
+    import lombok.Getter;
+    import lombok.NoArgsConstructor;
+    import lombok.Setter;
+    import org.hibernate.annotations.UpdateTimestamp;
+
+    import javax.persistence.*;
+    import javax.validation.constraints.NotBlank;
+    import javax.validation.constraints.NotEmpty;
+    import javax.validation.constraints.Size;
+    import java.time.LocalDateTime;
+    import java.util.List;
+
+    @Getter
+    @Setter
+    @NoArgsConstructor(force = true)
+    @AllArgsConstructor
+    @Entity
+    public class Recipe {
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "id", nullable = false)
+        @JsonIgnore
+        private Long id;
+
+        @NotBlank
+        private String name;
+
+        @NotBlank
+        private String category;
+
+        @NotBlank
+        private String description;
+
+        @UpdateTimestamp
+        private LocalDateTime date = LocalDateTime.now();
+
+        @NotEmpty
+        @Size(min = 1)
+        @ElementCollection
+        @CollectionTable(name = "ingredient", joinColumns = @JoinColumn(name = "id"))
+        @Column(name = "ingredients")
+        private List<String> ingredients;
+
+        @NotEmpty
+        @Size(min = 1)
+        @ElementCollection
+        @CollectionTable(name = "direction", joinColumns = @JoinColumn(name = "id"))
+        @Column(name = "directions")
+        private List<String> directions;
+    }
+  learner_created: true
+- name: src/resources/docker-compose.yml
+  visible: true
+  text: |-
+    services:
+      db:
+        container_name: recipe
+        image: postgres
+        environment:
+          POSTGRES_USER: recipe
+          POSTGRES_PASSWORD: root
+          PGDATA: /data/postgres
+        volumes:
+          - db:/data/order_tracker
+        ports:
+          - '5332:5432'
+        networks:
+          - db
+        restart: unless-stopped
+
+    networks:
+      db:
+        driver: bridge
+
+    volumes:
+      db:
+  learner_created: true
+- name: src/recipes/controller/ControllerExceptionHandler.java
+  visible: true
+  text: |-
+    package recipes.controller;
+
+    import jakarta.validation.ConstraintViolationException;
+    import jakarta.validation.ValidationException;
+    import org.springframework.http.HttpStatus;
+    import org.springframework.http.ResponseEntity;
+    import org.springframework.web.bind.annotation.ControllerAdvice;
+    import org.springframework.web.bind.annotation.ExceptionHandler;
+    import org.springframework.web.bind.annotation.ResponseBody;
+    import org.springframework.web.bind.annotation.ResponseStatus;
+
+    @ControllerAdvice
+    public class ControllerExceptionHandler {
+
+        @ResponseBody
+        @ResponseStatus(HttpStatus.BAD_REQUEST)
+        @ExceptionHandler(ValidationException.class)
+        ResponseEntity<Object> exceptionHandler(ValidationException ignored) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        @ResponseBody
+        @ResponseStatus(HttpStatus.BAD_REQUEST)
+        @ExceptionHandler(ConstraintViolationException.class)
+        ResponseEntity<Object> exceptionHandler(ConstraintViolationException ignored) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+  learner_created: true
 feedback_link: https://hyperskill.org/learn/step/13092#comment
 status: Unchecked
-record: -1
+record: 5
