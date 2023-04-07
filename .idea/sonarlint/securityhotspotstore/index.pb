@@ -123,15 +123,5 @@ X
 (gradle/wrapper/gradle-wrapper.properties,f\b\fbe448ebfc3eb2d4e308f6b8b043666f5b57235e
 <
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
-Z
-*Recipes/task/src/recipes/model/Recipe.java,7\c\7c4a61eaa262809defa730b8ccaad0e82c632e74
-i
-9Recipes/task/src/recipes/repository/RecipeRepository.java,e\3\e3185587296d74a1726662ee19a5204881a35c7d
-]
--Recipes/task/test/RecipesApplicationTest.java,a\9\a957c8489a2a93ca4c118ce746bf9805ad599404
-s
-CRecipes/task/src/recipes/controller/ControllerExceptionHandler.java,8\9\8974787a22c547f14ec4ce8890e1d473f70f5e4f
-f
-6Recipes/task/src/recipes/controller/ApiController.java,b\d\bd608eceb7ff16be55e2b3e95f35d61d93cc5b18
-c
-3Recipes/task/src/recipes/service/RecipeService.java,8\d\8d281e73598cb1f03c5f61ecaac557f1b86ac423
+I
+Recipes/task/build.gradle,9\d\9db78d6f5f995ca57cf5a0e69871b2026559b3c2

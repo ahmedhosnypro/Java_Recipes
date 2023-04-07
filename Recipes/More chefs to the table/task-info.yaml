@@ -832,6 +832,64 @@ files:
         List<Recipe> findByNameContainingIgnoreCaseOrderByDateDesc(String name);
     }
   learner_created: true
+- name: src/resources/docker-compose.yml
+  visible: true
+  text: |-
+    services:
+      db:
+        container_name: recipe
+        image: postgres
+        environment:
+          POSTGRES_USER: recipe
+          POSTGRES_PASSWORD: root
+          PGDATA: /data/postgres
+        volumes:
+          - db:/data/order_tracker
+        ports:
+          - '5332:5432'
+        networks:
+          - db
+        restart: unless-stopped
+
+    networks:
+      db:
+        driver: bridge
+
+    volumes:
+      db:
+  learner_created: true
+- name: src/recipes/controller/ControllerExceptionHandler.java
+  visible: true
+  text: |-
+    package recipes.controller;
+
+    import jakarta.validation.ConstraintViolationException;
+    import jakarta.validation.ValidationException;
+    import org.springframework.http.HttpStatus;
+    import org.springframework.http.ResponseEntity;
+    import org.springframework.web.bind.annotation.ControllerAdvice;
+    import org.springframework.web.bind.annotation.ExceptionHandler;
+    import org.springframework.web.bind.annotation.ResponseBody;
+    import org.springframework.web.bind.annotation.ResponseStatus;
+
+    @ControllerAdvice
+    public class ControllerExceptionHandler {
+
+        @ResponseBody
+        @ResponseStatus(HttpStatus.BAD_REQUEST)
+        @ExceptionHandler(ValidationException.class)
+        ResponseEntity<Object> exceptionHandler(ValidationException ignored) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        @ResponseBody
+        @ResponseStatus(HttpStatus.BAD_REQUEST)
+        @ExceptionHandler(ConstraintViolationException.class)
+        ResponseEntity<Object> exceptionHandler(ConstraintViolationException ignored) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+  learner_created: true
 - name: src/recipes/service/RecipeService.java
   visible: true
   text: |
@@ -880,7 +938,7 @@ files:
         }
     }
   learner_created: true
-- name: src/recipes/controller/ApiController.java
+- name: src/recipes/controller/RecipeController.java
   visible: true
   text: |-
     package recipes.controller;
@@ -983,6 +1041,15 @@ files:
         }
     }
   learner_created: true
+- name: src/recipes/controller/UserController.java
+  visible: true
+  learner_created: true
+- name: src/recipes/model/User.java
+  visible: true
+  learner_created: true
+- name: src/recipes/repository/UserRepository.java
+  visible: true
+  learner_created: true
 - name: src/recipes/model/Recipe.java
   visible: true
   text: |
@@ -1041,64 +1108,28 @@ files:
         private List<String> directions;
     }
   learner_created: true
-- name: src/resources/docker-compose.yml
+- name: src/recipes/dto/RecipeDTO.java
   visible: true
-  text: |-
-    services:
-      db:
-        container_name: recipe
-        image: postgres
-        environment:
-          POSTGRES_USER: recipe
-          POSTGRES_PASSWORD: root
-          PGDATA: /data/postgres
-        volumes:
-          - db:/data/order_tracker
-        ports:
-          - '5332:5432'
-        networks:
-          - db
-        restart: unless-stopped
-
-    networks:
-      db:
-        driver: bridge
-
-    volumes:
-      db:
   learner_created: true
-- name: src/recipes/controller/ControllerExceptionHandler.java
+- name: src/recipes/dto/UserDto.java
   visible: true
-  text: |-
-    package recipes.controller;
-
-    import jakarta.validation.ConstraintViolationException;
-    import jakarta.validation.ValidationException;
-    import org.springframework.http.HttpStatus;
-    import org.springframework.http.ResponseEntity;
-    import org.springframework.web.bind.annotation.ControllerAdvice;
-    import org.springframework.web.bind.annotation.ExceptionHandler;
-    import org.springframework.web.bind.annotation.ResponseBody;
-    import org.springframework.web.bind.annotation.ResponseStatus;
-
-    @ControllerAdvice
-    public class ControllerExceptionHandler {
-
-        @ResponseBody
-        @ResponseStatus(HttpStatus.BAD_REQUEST)
-        @ExceptionHandler(ValidationException.class)
-        ResponseEntity<Object> exceptionHandler(ValidationException ignored) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        @ResponseBody
-        @ResponseStatus(HttpStatus.BAD_REQUEST)
-        @ExceptionHandler(ConstraintViolationException.class)
-        ResponseEntity<Object> exceptionHandler(ConstraintViolationException ignored) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
+  learner_created: true
+- name: src/recipes/dto/Dto.java
+  visible: true
+  learner_created: true
+- name: src/recipes/security/SecurityConfig.java
+  visible: true
+  learner_created: true
+- name: src/recipes/security/SecurityUserDetails.java
+  visible: true
+  learner_created: true
+- name: src/recipes/security/SecurityUserDetailsService.java
+  visible: true
   learner_created: true
 feedback_link: https://hyperskill.org/learn/step/13092#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">Hyperskill</a>
+    to continue learning.
+  time: "Fri, 07 Apr 2023 13:35:39 UTC"
 record: 5

@@ -8,6 +8,11 @@ import recipes.repository.RecipeRepository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Ahmed Hosny
+ * @version 1.0
+ * @since 2023-04-07
+ */
 @Service
 public class RecipeService {
 

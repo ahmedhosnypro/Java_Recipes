@@ -24,18 +24,23 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
-    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
-    implementation 'javax.validation:validation-api:2.0.1.Final'
+    //Spring Boot Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     // h2
     runtimeOnly 'com.h2database:h2'
-    // javax.persistence
-    implementation 'org.eclipse.persistence:javax.persistence:2.2.1'
     //postgresql
     implementation 'org.postgresql:postgresql:42.2.27'
+    // validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+    implementation 'org.eclipse.persistence:javax.persistence:2.2.1'
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+
+    //model mapper
+    implementation 'org.modelmapper:modelmapper:2.4.4'
 }
